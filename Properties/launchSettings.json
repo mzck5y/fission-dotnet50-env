@@ -1,0 +1,13 @@
+﻿{
+    "profiles": {
+        "Oni.Fission.Dotnet5": {
+            "commandName": "Project",
+            "dotnetRunMessages": "true",
+            "applicationUrl": "https://localhost:8881;http://localhost:8888",
+            "environmentVariables": {
+                "ASPNETCORE_ENVIRONMENT": "Development",
+                "FISSION_CODE_PATH": "c:\\tmp\\func.cs"
+            }
+        }
+    }
+}
