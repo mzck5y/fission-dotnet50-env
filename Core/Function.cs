@@ -1,14 +1,17 @@
-﻿using Fission.DotNetCore.Api;
+﻿using Fission.DotNetCore.Attributes;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Routing;
+using Microsoft.Extensions.Logging;
 using System;
 using System.IO;
 using System.Linq;
+using System.Net;
 using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Runtime.Loader;
 using System.Threading.Tasks;
 
-namespace Fission.Dotnet5.Core
+namespace Fission.DotNetCore.Core
 {
     public class Function : AssemblyLoadContext
     {
@@ -67,12 +70,46 @@ namespace Fission.Dotnet5.Core
         [MethodImpl(MethodImplOptions.NoInlining)]
         public Task<IActionResult> Invoke(FissionContext context)
         {
+            if (ValidateMethod(context.Request.Method) == false)
+            {
+                return Task.FromResult((IActionResult)new StatusCodeResult((int)HttpStatusCode.MethodNotAllowed));
+            }
+
+            if (ValidateHmacSha1SignatureAsync(context).Result == false)
+            {
+                return Task.FromResult((IActionResult)new StatusCodeResult((int)HttpStatusCode.Forbidden));
+            }
+
+            string funcName = _info.GetCustomAttribute<FunctionNameAttribute>()?.Name;
+            context.Logger.LogInformation($"Function Name Called: {funcName}");
+
             return (Task<IActionResult>)_info.Invoke(_assembly.CreateInstance(_type.FullName), new[] { context });
         }
 
         #endregion
 
         #region Private/Protectd Methdos
+
+        private bool ValidateMethod(string requestMethod)
+        {
+            HttpMethodAttribute attr = (HttpMethodAttribute)_info.GetCustomAttributes(
+                    typeof(HttpMethodAttribute), true).FirstOrDefault();
+
+            string method = attr?.HttpMethods.FirstOrDefault() ?? "POST";
+
+            return string.Compare(method, requestMethod, true) == 0;
+        }
+
+        private async Task<bool> ValidateHmacSha1SignatureAsync(FissionContext context)
+        {
+            HmacSha1Attribute attr = _info.GetCustomAttribute<HmacSha1Attribute>(true);
+            if (attr != null)
+            {
+                return await attr.IsSignatureValidAsync(context);
+            }
+
+            return true; // if attr is null then no hmacsha1 validation was specified
+        }
 
         [MethodImpl(MethodImplOptions.NoInlining)]
         private static string GetSourceCode(string codePath)

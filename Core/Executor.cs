@@ -1,13 +1,11 @@
-﻿using Fission.Dotnet5.Core;
-using Fission.DotNetCore.Api;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Net;
 using System.Threading.Tasks;
 
-namespace Oni.Fission.Dotnet5
+namespace Fission.DotNetCore.Core
 {
     [Route("/")]
     [ApiController]

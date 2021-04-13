@@ -5,7 +5,7 @@ using System.IO;
 using System.Text.Json;
 using System.Threading.Tasks;
 
-namespace Fission.DotNetCore.Api
+namespace Fission.DotNetCore.Core
 {
     public class FissionContext
     {

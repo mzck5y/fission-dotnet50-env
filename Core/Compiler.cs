@@ -10,7 +10,7 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 
-namespace Fission.Dotnet5.Core
+namespace Fission.DotNetCore.Core
 {
     public class Compiler
     {

@@ -1,4 +1,5 @@
-﻿using Fission.DotNetCore.Api;
+﻿using Fission.DotNetCore.Attributes;
+using Fission.DotNetCore.Core;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using System;
@@ -11,6 +12,9 @@ namespace Fission.DotNetCore
 {
     public class FissionFunction
     {
+        [HttpPost]
+        [FunctionName("first-function")]
+        [HmacSha1("hmac", "3A6AD150A24C47D190D7EE3FF5CECDEEC1230C335FFC437F9AA44A575D7F0D55")]
         public async Task<IActionResult> Execute(FissionContext ctx)
         {
             ctx.Logger.LogInformation("C# dotnet 5 function.");

@@ -3,6 +3,7 @@
   <PropertyGroup>
     <TargetFramework>net5.0</TargetFramework>
     <AssemblyName>fission-dotnet50</AssemblyName>
+    <RootNamespace>Fission.DotNetCore</RootNamespace>
   </PropertyGroup>
 
   <ItemGroup>
