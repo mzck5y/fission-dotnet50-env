@@ -4,7 +4,6 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Logging;
 using System;
-using System.Collections.Generic;
 using System.Net;
 using System.Threading.Tasks;
 
@@ -51,15 +50,14 @@ namespace Oni.Fission.Dotnet5
             {
                 AbsoluteExpirationRelativeToNow = TimeSpan.FromDays(30)
             });
-
+            
             return Ok();
         }
 
         [AcceptVerbs("GET", "POST", "PUT", "PATCH", "DELETE", "HEAD", "OPTIONS")]
         public async Task<IActionResult> ExecuteFunction()
         {
-            var arguments = new Dictionary<string, object>();
-            FissionContext ctx = new FissionContext(Request, Response, arguments, _logger);
+            FissionContext ctx = new FissionContext(Request, Response, _logger);
 
             if (_cache.TryGetValue("func", out Function function) == false)
             {

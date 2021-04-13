@@ -69,7 +69,9 @@ namespace Fission.Dotnet5.Core
             Assembly.GetEntryAssembly()?.GetReferencedAssemblies().ToList()
                .ForEach(a => references.Add(MetadataReference.CreateFromFile(Assembly.Load(a).Location)));
 
-            return CSharpCompilation.Create("hello.dll",
+            string asmName = Path.GetRandomFileName();
+
+            return CSharpCompilation.Create($"{asmName}.dll",
                 new[] { parsedSyntaxTree },
                 references: references,
                 options: new CSharpCompilationOptions(OutputKind.DynamicallyLinkedLibrary,
